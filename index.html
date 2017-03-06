@@ -1,0 +1,219 @@
+<html>
+
+    <head>
+
+        <title>jQueryUI</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+        <style type="text/css">
+            body{
+                padding: 0;
+                margin: 0;
+                font-family: sans-serif, Helvetica;
+                min-width: 850px;
+            }
+
+            #header {
+                width: 100%;
+                height: 50px;
+                background: lightsteelblue;
+            }
+
+            span {
+                color: steelblue;
+                position: absolute;
+                font-size: 200%;
+                padding: 7px 0 0 10px;
+            }
+
+            button:focus {
+                outline: none;
+            }
+
+            button {
+                border: none;
+            }
+
+            #toggleButtons {
+                text-align: center;
+            }
+
+            .toggleBtn {
+                margin-top: 2px;
+                font-size: 130%;
+                display: inline;
+                padding: 10px;
+                border: 1px solid steelblue;
+                border-radius: 5px;
+                color: steelblue;
+                background: lightsteelblue;
+            }
+
+            .divPosFix {
+                top: -1px;
+                position: relative;
+            }
+
+            .toggleBtn:hover {
+                border: 1px solid white;
+                color: white;
+            }
+
+            .active {
+                background: steelblue;
+                color: white;
+            }
+
+            .workBlock{
+                font-size: 100%;
+                width: 25%;
+                float:left;
+                resize: none;
+                box-sizing: border-box;
+                border: 1px solid gray;
+            }
+
+            iframe{
+                border: none;
+                width: 100%;
+                height: 100%;
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+
+        <div id="header">
+            <span>CodePlayer</span>
+            <div id="toggleButtons">
+                <button id="htmlBtn" title="#htmlTxt" class="toggleBtn active">HTML</button>
+                <button id="cssBtn" title="#cssTxt" class="toggleBtn active">CSS</button>
+                <button id="jsBtn" title="#jsTxt" class="toggleBtn active">JavaScript</button>
+                <button id="outputBtn" title="#output" class="toggleBtn active">Output</button>
+                <div id="outputOnly" class="toggleBtn divPosFix">Output Only</div>
+            </div>
+        </div>
+
+        <textarea id="htmlTxt" class="workBlock" placeholder="HTML"></textarea>
+        <textarea id="cssTxt" class="workBlock" placeholder="CSS"></textarea>
+        <textarea id="jsTxt" class="workBlock" placeholder="JavaScript"></textarea>
+        <iframe id="output" class="workBlock" style="background: black;"></iframe>
+
+
+        <script>
+
+            var wh = (window.innerHeight - 50) + "px";
+
+            $(".workBlock").css("height", wh);
+
+            $(window)
+                .resize(function() {
+                    wh = (window.innerHeight - 50) + "px";
+                    $(".workBlock").css("height", wh);
+                });
+
+            var click = true;
+
+            function outputOnly() {
+                var onlyOutput = $("textarea:visible").length;
+
+                if(onlyOutput == 0) {
+                    $("#output").show();
+                    $("#outputBtn").hide();
+                    $("#outputOnly").addClass("active");
+                    $("#outputBtn").addClass("active");
+                    click = false;
+                }
+            }
+
+            function workAreaResize(){
+                var workArea = $(".workBlock:visible").length;
+
+                if (workArea == 1 ){
+                    $(".workBlock").css("width", "100%");
+                } else if (workArea == 2) {
+                    $(".workBlock").css("width", "50%");
+                } else if (workArea == 3) {
+                    $(".workBlock").css("width", "33.333%");
+                } else {
+                    $(".workBlock").css("width", "25%");
+                }
+            }
+
+            $("button")
+                .click(function() {
+                    var txtArea = $(this).attr("title");
+                    $(txtArea).toggle();
+                    $(this).toggleClass("active");
+                    $("#outputOnly").removeClass("active");
+                    $("#outputBtn").show();
+
+                    outputOnly();
+
+                    workAreaResize();
+
+                    click = true;
+                });
+
+            var txta = $("textarea").toArray();
+
+            $("#outputOnly")
+                .click(function(){
+                    if (click) {
+                        txta.forEach(function(txta){
+                            if($(txta).css("display") == "block") {
+                                $(txta).hide();
+                            }
+                        });
+
+                        $("#outputOnly").addClass("active");
+                        $("#htmlBtn").removeClass("active");
+                        $("#cssBtn").removeClass("active");
+                        $("#jsBtn").removeClass("active");
+                        $("#outputBtn").hide();
+                        $("#output").show();
+                        workAreaResize();
+
+                        click = false;
+
+                    } else {
+
+                        $("textarea").show();
+                        $("#outputOnly").removeClass("active");
+                        $("#htmlBtn").addClass("active");
+                        $("#cssBtn").addClass("active");
+                        $("#jsBtn").addClass("active");
+                        $("#outputBtn").addClass("active");
+                        $("#outputBtn").show();
+                        workAreaResize();
+
+                        click = true;
+
+                    }
+                });
+
+//            $("#outputBtn")
+//                .mouseenter(function(){
+//                    $("#outputOnly").show("slide", 400);
+//                });
+//
+//            $("#outputOnly")
+//                .mouseleave(function(){
+//                    setTimeout(
+//                        function(){
+//                            $("#outputOnly").css("display", "none");
+//                        }, 2000);
+//                });
+
+
+        </script>
+
+    </body>
+
+</html>
